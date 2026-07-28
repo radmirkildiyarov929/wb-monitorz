@@ -3,11 +3,12 @@ import requests
 
 def get_price(article):
 
-    url = f"https://www.wildberries.ru/catalog/{article}/detail.aspx"
+    url = f"https://card.wb.ru/cards/detail?appType=1&curr=rub&dest=-1257786&spp=30&nm={article}"
 
     headers = {
         "User-Agent": "Mozilla/5.0",
-        "Accept-Language": "ru-RU,ru;q=0.9"
+        "Origin": "https://www.wildberries.ru",
+        "Referer": "https://www.wildberries.ru/"
     }
 
     response = requests.get(url, headers=headers)
@@ -16,13 +17,13 @@ def get_price(article):
         print(article, "Ошибка:", response.status_code)
         return None
 
-    text = response.text
+    try:
+        product = response.json()["data"]["products"][0]
 
-    marker = '"salePrice":'
+        price = product["sizes"][0]["price"]["product"] / 100
 
-    if marker in text:
-        price = text.split(marker)[1].split(",")[0]
-        return int(price) / 100
+        return price
 
-    print(article, "цена не найдена")
-    return None
+    except Exception as e:
+        print(article, "Ошибка обработки:", e)
+        return None
