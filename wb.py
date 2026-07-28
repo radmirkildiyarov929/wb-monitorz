@@ -19,6 +19,8 @@ def get_price(article):
 
     data = response.json()
 
-    print(json.dumps(data, indent=2)[:1000])
+for key, value in data.items():
+    if "price" in key.lower():
+        print(key, value)
 
-    return None
+return None
