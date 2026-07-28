@@ -6,7 +6,7 @@ def get_price(article):
     vol = article // 100000
     part = article // 1000
 
-    url = f"https://basket-{vol:02d}.wbbasket.ru/vol{vol}/part{part}/{article}/info/ru/card.json"
+    url = f"https://basket-02.wbbasket.ru/vol{vol}/part{part}/{article}/info/ru/card.json"
 
     response = requests.get(url)
 
