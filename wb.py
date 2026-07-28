@@ -1,29 +1,29 @@
 import requests
 
-HEADERS = {
-    "User-Agent": "Mozilla/5.0"
-}
 
 def get_price(article):
-    url = f"https://card.wb.ru/cards/v2/detail?appType=1&curr=rub&dest=-1257786&nm={article}"
 
-    r = requests.get(url, headers=HEADERS, timeout=20)
-    r.raise_for_status()
+    url = f"https://card.wb.ru/cards/detail?nm={article}"
 
-    data = r.json()
+    headers = {
+        "User-Agent": "Mozilla/5.0"
+    }
 
-    products = data.get("data", {}).get("products", [])
+    response = requests.get(url, headers=headers)
 
-    if not products:
+    if response.status_code != 200:
+        print(article, "Ошибка:", response.status_code)
         return None
 
-    product = products[0]
+    data = response.json()
 
-    sizes = product.get("sizes", [])
+    try:
+        product = data["data"]["products"][0]
 
-    if not sizes:
+        price = product["salePriceU"] / 100
+
+        return price
+
+    except Exception as e:
+        print(article, "Ошибка обработки:", e)
         return None
-
-    price = sizes[0]["price"]["product"] / 100
-
-    return int(price)
