@@ -1,3 +1,3 @@
-from playwright_stealth import Stealth
+from wb import get_price
 
-print(dir(Stealth()))
+get_price(16237115)
