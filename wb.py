@@ -1,20 +1,28 @@
 import requests
+import json
 
 
 def get_price(article):
 
-    url = f"https://basket-02.wbbasket.ru/vol{article//100000}/part{article//1000}/{article}/info/ru/card.json"
+    vol = article // 100000
+    part = article // 1000
 
-    headers = {
-        "User-Agent": "Mozilla/5.0"
-    }
+    urls = [
+        f"https://basket-02.wbbasket.ru/vol{vol}/part{part}/{article}/info/ru/card.json",
+        f"https://basket-02.wbbasket.ru/vol{vol}/part{part}/{article}/info/ru/price.json",
+        f"https://basket-02.wbbasket.ru/vol{vol}/part{part}/{article}/info/ru/product.json"
+    ]
 
-    r = requests.get(url, headers=headers)
+    for url in urls:
 
-    print(article, r.status_code)
+        r = requests.get(url)
 
-    data = r.json()
+        print(url)
+        print("STATUS:", r.status_code)
 
-    print(data.keys())
-
-    return None
+        if r.status_code == 200:
+            try:
+                data = r.json()
+                print(data.keys())
+            except:
+                pass
