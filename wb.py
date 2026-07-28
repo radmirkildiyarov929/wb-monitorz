@@ -3,27 +3,26 @@ import requests
 
 def get_price(article):
 
-    url = f"https://card.wb.ru/cards/detail?appType=1&curr=rub&dest=-1257786&spp=30&nm={article}"
+    url = f"https://basket-02.wbbasket.ru/vol{article//100000}/part{article//1000}/{article}/info/ru/card.json"
 
     headers = {
-        "User-Agent": "Mozilla/5.0",
-        "Origin": "https://www.wildberries.ru",
-        "Referer": "https://www.wildberries.ru/"
+        "User-Agent": "Mozilla/5.0"
     }
 
     response = requests.get(url, headers=headers)
 
+    print(article, response.status_code)
+
     if response.status_code != 200:
-        print(article, "Ошибка:", response.status_code)
         return None
 
     try:
-        product = response.json()["data"]["products"][0]
+        data = response.json()
 
-        price = product["sizes"][0]["price"]["product"] / 100
+        price = data["priceU"] / 100
 
         return price
 
     except Exception as e:
-        print(article, "Ошибка обработки:", e)
+        print("Ошибка:", e)
         return None
