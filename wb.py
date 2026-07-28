@@ -3,7 +3,10 @@ import requests
 
 def get_price(article):
 
-    url = f"https://basket-02.wbbasket.ru/vol{article//100000}/part{article//1000}/{article}/info/ru/price-history.json"
+    vol = article // 100000
+    part = article // 1000
+
+    url = f"https://basket-{vol:02d}.wbbasket.ru/vol{vol}/part{part}/{article}/info/ru/card.json"
 
     response = requests.get(url)
 
@@ -14,6 +17,6 @@ def get_price(article):
 
     data = response.json()
 
-    print(data)
+    print(data.keys())
 
     return None
