@@ -1,5 +1,4 @@
 import requests
-import json
 
 
 def get_price(article):
@@ -8,9 +7,9 @@ def get_price(article):
     part = article // 1000
 
     urls = [
-        f"https://basket-02.wbbasket.ru/vol{vol}/part{part}/{article}/info/ru/card.json",
-        f"https://basket-02.wbbasket.ru/vol{vol}/part{part}/{article}/info/ru/price.json",
-        f"https://basket-02.wbbasket.ru/vol{vol}/part{part}/{article}/info/ru/product.json"
+        f"https://basket-02.wbbasket.ru/vol{vol}/part{part}/{article}/info/ru/options.json",
+        f"https://basket-02.wbbasket.ru/vol{vol}/part{part}/{article}/info/ru/details.json",
+        f"https://basket-02.wbbasket.ru/vol{vol}/part{part}/{article}/info/ru/metadata.json"
     ]
 
     for url in urls:
@@ -22,7 +21,6 @@ def get_price(article):
 
         if r.status_code == 200:
             try:
-                data = r.json()
-                print(data.keys())
+                print(r.json().keys())
             except:
-                pass
+                print(r.text[:500])
