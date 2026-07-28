@@ -1,22 +1,25 @@
 import requests
+import re
 
 
 def get_price(article):
 
-    vol = article // 100000
-    part = article // 1000
+    url = f"https://www.wildberries.ru/catalog/{article}/detail.aspx"
 
-    url = f"https://basket-02.wbbasket.ru/vol{vol}/part{part}/{article}/info/ru/card.json"
+    headers = {
+        "User-Agent": "Mozilla/5.0"
+    }
 
-    response = requests.get(url)
+    response = requests.get(url, headers=headers)
 
-    print(article, response.status_code)
+    print("STATUS:", response.status_code)
 
-    if response.status_code != 200:
-        return None
+    text = response.text
 
-    data = response.json()
+    for word in ["price", "salePrice", "finalPrice", "priceU"]:
+        if word in text:
+            print("Найдено:", word)
 
-    print(data.keys())
+    numbers = re.findall(r'\d{3,6}', text)
 
-    return None
+    print(numbers[:50])
