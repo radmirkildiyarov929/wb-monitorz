@@ -1,15 +1,19 @@
 import requests
-import json
 
 
 def get_price(article):
 
-    url = f"https://basket-02.wbbasket.ru/vol{article//100000}/part{article//1000}/{article}/info/ru/card.json"
+    url = f"https://basket-02.wbbasket.ru/vol{article//100000}/part{article//1000}/{article}/info/ru/price-history.json"
 
     response = requests.get(url)
 
-    print("STATUS:", response.status_code)
+    print(article, response.status_code)
+
+    if response.status_code != 200:
+        return None
 
     data = response.json()
 
-    print(json.dumps(data, indent=2, ensure_ascii=False))
+    print(data)
+
+    return None
