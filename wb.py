@@ -1,5 +1,4 @@
 import requests
-import json
 
 
 def get_price(article):
@@ -19,8 +18,8 @@ def get_price(article):
 
     data = response.json()
 
-for key, value in data.items():
-    if "price" in key.lower():
-        print(key, value)
+    for key, value in data.items():
+        if "price" in key.lower():
+            print(key, value)
 
-return None
+    return None
