@@ -1,3 +1,4 @@
-from wb import get_price
+import playwright_stealth
 
-get_price(16237115)
+print(playwright_stealth.__version__)
+print(dir(playwright_stealth))
