@@ -1,25 +1,27 @@
-import requests
-import re
+from playwright.sync_api import sync_playwright
 
 
 def get_price(article):
 
     url = f"https://www.wildberries.ru/catalog/{article}/detail.aspx"
 
-    headers = {
-        "User-Agent": "Mozilla/5.0"
-    }
+    with sync_playwright() as p:
 
-    response = requests.get(url, headers=headers)
+        browser = p.chromium.launch(headless=True)
 
-    print("STATUS:", response.status_code)
+        page = browser.new_page(
+            user_agent="Mozilla/5.0"
+        )
 
-    text = response.text
+        page.goto(url, wait_until="networkidle")
 
-    for word in ["price", "salePrice", "finalPrice", "priceU"]:
-        if word in text:
-            print("Найдено:", word)
+        text = page.content()
 
-    numbers = re.findall(r'\d{3,6}', text)
+        print("Страница загружена")
 
-    print(numbers[:50])
+        if "price" in text:
+            print("Цена найдена в коде")
+
+        print(text[:1000])
+
+        browser.close()
