@@ -1,4 +1,5 @@
 import requests
+import json
 
 
 def get_price(article):
@@ -16,13 +17,8 @@ def get_price(article):
     if response.status_code != 200:
         return None
 
-    try:
-        data = response.json()
+    data = response.json()
 
-        price = data["priceU"] / 100
+    print(json.dumps(data, indent=2)[:1000])
 
-        return price
-
-    except Exception as e:
-        print("Ошибка:", e)
-        return None
+    return None
