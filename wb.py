@@ -22,7 +22,7 @@ def get_price(article):
         )
 
         stealth = Stealth()
-        page = stealth.use_sync(page)
+        stealth.apply_stealth_sync(page)
 
         page.goto(url, wait_until="networkidle", timeout=60000)
 
