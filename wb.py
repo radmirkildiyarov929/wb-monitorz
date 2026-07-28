@@ -1,26 +1,34 @@
-import requests
+from playwright.sync_api import sync_playwright
+from playwright_stealth import stealth_sync
 
 
 def get_price(article):
 
-    vol = article // 100000
-    part = article // 1000
+    url = f"https://www.wildberries.ru/catalog/{article}/detail.aspx"
 
-    urls = [
-        f"https://basket-02.wbbasket.ru/vol{vol}/part{part}/{article}/info/ru/options.json",
-        f"https://basket-02.wbbasket.ru/vol{vol}/part{part}/{article}/info/ru/details.json",
-        f"https://basket-02.wbbasket.ru/vol{vol}/part{part}/{article}/info/ru/metadata.json"
-    ]
+    with sync_playwright() as p:
 
-    for url in urls:
+        browser = p.chromium.launch(
+            headless=True,
+            args=[
+                "--disable-blink-features=AutomationControlled",
+                "--no-sandbox"
+            ]
+        )
 
-        r = requests.get(url)
+        page = browser.new_page(
+            viewport={"width": 1400, "height": 900},
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+        )
 
-        print(url)
-        print("STATUS:", r.status_code)
+        stealth_sync(page)
 
-        if r.status_code == 200:
-            try:
-                print(r.json().keys())
-            except:
-                print(r.text[:500])
+        page.goto(url, wait_until="domcontentloaded", timeout=60000)
+
+        page.wait_for_timeout(5000)
+
+        print(page.title())
+
+        print(page.content()[:2000])
+
+        browser.close()
