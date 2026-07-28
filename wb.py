@@ -17,18 +17,16 @@ def get_price(article):
         )
 
         page = browser.new_page(
-            viewport={"width": 1400, "height": 900},
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+            viewport={"width": 1400, "height": 900}
         )
 
-        Stealth().apply_stealth_sync(page)
+        stealth = Stealth()
+        page = stealth.use_sync(page)
 
-        page.goto(url, wait_until="domcontentloaded", timeout=60000)
+        page.goto(url, wait_until="networkidle", timeout=60000)
 
-        page.wait_for_timeout(5000)
-
-        print(page.title())
-
-        print(page.content()[:2000])
+        print("TITLE:", page.title())
+        print(page.content()[:3000])
 
         browser.close()
